@@ -3,6 +3,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import time
+
 
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:Arzumkuzum2134-@localhost/fastapi/"
 
@@ -18,3 +22,25 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+#Password already changed but kept the old one for reference to remember
+#This one is only for documentation purposes. We do not need now because postgres will do everything
+
+"""
+while True:    
+
+    try:
+        conn = psycopg2.connect(host= 'localhost', database='fastapi', user='postgres', password='ArzumKuzum2134-', cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
+        print("Database connection was succesfull!")
+        break
+    except Exception as error:
+        print("Database connection failed")
+        print("Error", error)
+        time.sleep(2)
+
+"""
+
+
+
