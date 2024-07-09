@@ -2,7 +2,7 @@ from pydantic import BaseModel,EmailStr
 from datetime import datetime
 from typing import Optional, Literal
 from pydantic.types import conint
-from .. import schemas, database, models, oauth2
+
 
 class PostBase(BaseModel):
     title: str
@@ -28,6 +28,14 @@ class Post(PostBase):
     created_at : datetime
     owner_id: int
     owner: UserOut
+
+class PostOut(PostBase):
+    Post: Post
+    votes: int
+
+    class Config:
+        orm_mode = True
+
 
 
 class PostResponse(PostBase):

@@ -1,5 +1,6 @@
 from automation.automation import current_users
 from .. import models, schemas, oauth2
+from sqlalchemy import func
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 from ..database import engine, get_db
@@ -15,11 +16,15 @@ router = APIRouter(
 
 
 #get posts
-@router.get("/", response_model=List[schemas.PostResponse])
+@router.get("/", response_model=List[schemas.PostOut])
 def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     #cursor.execute("""SELECT * FROM posts""")
     #posts = cursor.fetchall()
     posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all
+    
+    results = db.query(models.Post, func.count(models.Vote.post_id)).label("votes").join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True).gorup_by(models.Post.id)
+    all()
+
     return posts
 
 #create posts
